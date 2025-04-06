@@ -26,20 +26,6 @@ services:
       - ./init:/docker-entrypoint-initdb.d
       - ${PWD}/upload/restaurants.json:/tmp/restaurants.json
 
-  # mongodb:
-  #   hostname: mongodb
-  #   image: mongodb/mongodb-atlas-local
-  #   enviroment:
-  #     - MONGODB_INITDB_ROOT_USERNAME=user
-  #     - MONGODB_INITDB_ROOT_PASSWORD=pass
-  #     - RUNNER_LOG_FILE=/dev/stderr
-  #   ports:
-  #     - "27018:27017"
-  #   volumes:
-  #     - ./init:/docker-entrypoint-initdb.d
-  #     - ${PWD}/upload/restaurants.json:/tmp/restaurants.json
-
-
   # ollama: 
   #   image: ollama/ollama
   #   volumes: 
