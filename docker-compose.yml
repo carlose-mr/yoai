@@ -8,8 +8,8 @@ services:
       image: mongodb/mongodb-atlas-local
       enviroment:
         - MONGODB_INITDB_ROOT_USERNAME=user
-        - MONGODB_INITDB_ROOT_PASSWORD=password
-        - RUNNER_LOG_FILE=/dev/strderr
+        - MONGODB_INITDB_ROOT_PASSWORD=pass
+        - RUNNER_LOG_FILE=/dev/stderr
       ports:
         - 27018:27017
       volumes:
