@@ -1,0 +1,46 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: ./docker/jupyter/Dockerfile
+    volumes:
+      - ./work:/home/jovyan/work
+    ports:
+      - 8888:8888
+    command: "start-notebook.sh --NotebookApp.token="
+    
+  ollama: 
+    image: ollama/ollama
+    volumes: 
+      - ./ollama-models:/root/.ollama
+    ports:
+      - 11434:11434
+
+  web:
+    image: nginx:1.27.3-alpine
+    volumes:
+      - ./web:/usr/share/nginx/html
+    ports:
+      - "3001:80"
