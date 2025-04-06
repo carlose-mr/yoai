@@ -3,23 +3,29 @@ version: '3.1'
 
 services:
 
-  mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+  mongodb:
+      hostname: mongodb
+      image: mongodb/mongodb-atlas-local
+      enviroment:
+        - MONGODB_INITDB_ROOT_USERNAME=user
+        - MONGODB_INITDB_ROOT_PASSWORD=password
+        - RUNNER_LOG_FILE=/dev/strderr
+      ports:
+        - 27018:27017
+      volumes:
+        - ./init:/docker-entrypoint-initdb.d
+        - ${PWD}/upload/restaurants.json:/tmp/restaurants.json
 
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-      ME_CONFIG_BASICAUTH: false
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: example
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+  #     ME_CONFIG_BASICAUTH: false
 
   jupyter:
     build:
@@ -31,16 +37,16 @@ services:
       - 8888:8888
     command: "start-notebook.sh --NotebookApp.token="
     
-  ollama: 
-    image: ollama/ollama
-    volumes: 
-      - ./ollama-models:/root/.ollama
-    ports:
-      - 11434:11434
+  # ollama: 
+  #   image: ollama/ollama
+  #   volumes: 
+  #     - ./ollama-models:/root/.ollama
+  #   ports:
+  #     - 11434:11434
 
-  web:
-    image: nginx:1.27.3-alpine
-    volumes:
-      - ./web:/usr/share/nginx/html
-    ports:
-      - "3001:80"
+  # web:
+  #   image: nginx:1.27.3-alpine
+  #   volumes:
+  #     - ./web:/usr/share/nginx/html
+  #   ports:
+  #     - "3001:80"
