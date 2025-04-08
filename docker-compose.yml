@@ -14,17 +14,32 @@ services:
     command: "start-notebook.sh --NotebookApp.token="
 
   mongodb:
-    hostname: mongodb
-    image: mongodb/mongodb-atlas-local
-    environment:
-      - MONGODB_INITDB_ROOT_USERNAME=user
-      - MONGODB_INITDB_ROOT_PASSWORD=pass
-      - RUNNER_LOG_FILE=/dev/stderr
-    ports:
-      - 27018:27017
+      hostname: mongodb
+      image: mongodb/mongodb-atlas-local
+      environment:
+        - MONGODB_INITDB_ROOT_USERNAME=user
+        - MONGODB_INITDB_ROOT_PASSWORD=pass
+        - RUNNER_LOG_FILE=/dev/stderr
+      ports:
+        - 27018:27017
+      volumes:
+        - ./init:/docker-entrypoint-initdb.d
+        - ${PWD}/upload/restaurants.json:/tmp/restaurants.json
+
+  node:
+    build:
+      context: .
+      dockerfile: ./docker/node/Dockerfile
+    user: "node"
     volumes:
-      - ./init:/docker-entrypoint-initdb.d
-      - ${PWD}/upload/restaurants.json:/tmp/restaurants.json
+      - ./node/app:/home/node/app
+    ports:
+      - "4200:4200"
+    environment:
+      NODE_ENV: development
+      NGROK_AUTHTOKEN: 2uYlzDhJloETw7ymppEkYN5hMEf_7J8ugjMKLDFht41s9uHuY
+    stdin_open: true
+    tty: true 
 
   # ollama: 
   #   image: ollama/ollama
